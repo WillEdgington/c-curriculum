@@ -4,8 +4,6 @@ A self-directed curriculum for learning C, structured in phases. Each phase cove
 
 > Planned collaboratively with AI assistance and updated as I progress through each phase.
 
----
-
 ## Phase 1 - Foundations
 **Goal:** Get comfortable enough with C syntax, memory, and tooling to build something small but real.
 
@@ -13,29 +11,27 @@ A self-directed curriculum for learning C, structured in phases. Each phase cove
 - Compilation model: preprocessor → compiler → linker, `gcc`/`clang`, `Makefile` basics
 - Primitive types, operators, control flow
 - Functions, scope, stack frames (mental model, not assembly)
-- Arrays and pointer arithmetic - the core of Phase 1
+- Arrays and pointer arithmetic (the core of Phase 1)
 - Strings as `char` arrays, `<string.h>`
 - Structs and basic typedef patterns
 - Manual memory: `malloc`, `free`, `calloc`, heap vs stack
 - File I/O: `fopen`, `fread`, `fwrite`, `fclose`
-- `<stdio.h>`, `<stdlib.h>`, `<string.h>` - the everyday headers
+- `<stdio.h>`, `<stdlib.h>`, `<string.h>` (the everyday headers)
 - Basic debugging: `gdb`, `valgrind` for memory leaks
 - Sanitizer flags: `-fsanitize=address` (ASan), `-fsanitize=undefined` (UBSan) - run these during development on every project
 
 ### Resources
-- [*C Programming Full Course for free ⚙️*](https://youtu.be/xND0t1pr3KY?si=HhqefSVryw13gdQV) on YouTube (for setup and basics)
-- *The C Programming Language* (K&R) - read chapters 1–6 alongside the project, not before
-- `cs50x` first 2–3 weeks for environment setup if needed
-- `valgrind` and `gdb` tutorials (short, practical ones)
+- [*C Programming Full Course for free*](https://youtu.be/xND0t1pr3KY?si=HhqefSVryw13gdQV) (for setup and basics)
+- *The C Programming Language* (K&R): read chapters 1–6 alongside the project, not before
 
 ### Project - `cjson`: A minimal JSON parser
 Parse a subset of JSON (strings, numbers, booleans, null, nested objects, arrays) from a file into a C struct tree, then pretty-print it back.
 
-**Why:** Forces handling of strings, structs, recursive data structures, and manual memory - all in Phase 1 territory. A real problem with a clear correctness signal.
+**Why:** Forces handling of strings, structs, recursive data structures, and manual memory (all in Phase 1 territory). A real problem with a clear correctness signal.
 
-**Stretch:** Add a simple query interface - e.g. `get(root, "user.name")` returns the value.
+**Stretch:** Add a query interface supporting dot-separated path traversal across nested objects and arrays (e.g. `json_get_path(root, "users.0.name")` returns the matching node).
 
----
+**Completed Example:** [cjson](https://github.com/WillEdgington/cjson)
 
 ## Phase 2 - Memory, Data Structures, and the C Idiom
 **Goal:** Own memory explicitly. Build the data structures I've taken for granted in Python/JS.
