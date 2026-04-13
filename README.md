@@ -1,8 +1,8 @@
 # c-curriculum
 
-A self-directed curriculum for learning C, structured in phases. Each phase covers the concepts needed to tackle a project slightly beyond my current ability, forcing learning as I go. Concepts are introduced before the project that needs them, but kept brief - the project is where understanding solidifies.
+A self-directed curriculum for learning C, structured in phases. Each phase covers the concepts needed to tackle a project slightly beyond current ability, forcing learn as you go. Concepts are introduced before the project that needs them, but kept brief - the project is where understanding solidifies.
 
-> Planned collaboratively with AI assistance and updated as I progress through each phase.
+> Planned collaboratively with AI assistance and updated as I progress through and review each phase.
 
 ## Phase 1 - Foundations
 **Goal:** Get comfortable enough with C syntax, memory, and tooling to build something small but real.
@@ -139,6 +139,32 @@ Build a library supporting arbitrarily deep dense networks. Train it on MNIST (h
 
 ---
 
+## Standalone - A Linear Programming Engine
+**Goal:** Build a language and solver engine for linear programming mathematics in C.
+
+### Concepts
+- Lexing and parsing a domain-specific language for expressing linear programs
+- The simplex method: tableau representation, pivoting, basis selection, standard form
+- Slack variables, dual variables, shadow prices, reduced costs
+- Detecting infeasible and unbounded problems
+- Numerical stability considerations in iterative matrix algorithms
+
+### Resources
+- *Introduction to Linear Programming* (Bertsimas & Tsitsiklis): chapters 1–3 for the theory
+- Understand the simplex algorithm by hand before implementing it
+- `matlib` from [Phase 4](#phase-4---low-level-numerics-and-performance) as the computational backend
+
+### Project - `clp`: A Linear Programming Engine
+Build a tool that lets you express a linear program in a natural language format and solves it, reporting a full solution: primal variables, objective value, slacks, duals, and reduced costs.
+
+**Why:** Combines language front-end work with numerical computing. Linear programming appears throughout operations research, economics, logistics, and machine learning. Open-ended enough to keep iterating on and potentially useful to others.
+
+**Stretch:** Two-phase simplex for problems without an obvious initial feasible point. Minimisation and maximisation. Sensitivity analysis. A library interface so the solver can be embedded in other projects.
+
+**Placement:** After [Phase 5](#phase-5---neural-network-from-scratch) (`matlib` primitives available), before [Phase 6](#phase-6---interpreter--compiler) (warms up lexer and parser thinking without the full complexity of a general language).
+
+---
+
 ## Phase 6 - Interpreter / Compiler
 **Goal:** Build a working interpreted language in C.
 
@@ -154,7 +180,7 @@ Build a library supporting arbitrarily deep dense networks. Train it on MNIST (h
 - *Crafting Interpreters* (Nystrom, free online) - the definitive resource. Follow the C half (Part III), not the Java half.
 - Do not skip the challenges at the end of each chapter.
 
-### Project - `clox` (or my own variant)
+### Project - `clox` (or own variant)
 A complete interpreted language with: variables, control flow, functions, closures, classes, and a mark-sweep garbage collector.
 
 **Why:** Crafting Interpreters guides directly to this. By Phase 6 the C fluency is there to go off-piste - modify the language, add features, make it your own.
