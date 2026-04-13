@@ -6,6 +6,20 @@ A self-directed curriculum for learning C, structured in phases. Each phase cove
 
 ---
 
+## Contents
+
+- **[Phase 1 - Foundations](#phase-1---foundations)**
+- **[Phase 2 - Data Structures and the C Idiom](#phase-2---data-structures-and-the-c-idiom)**
+  - **[Phase 2.5 - Bridging Data Structures and Systems](#phase-25---bridging-data-structures-and-systems)**
+- **[Phase 3 - Systems Thinking](#phase-3---systems-thinking)**
+- **[Phase 4 - Low-Level Numerics and Performance](#phase-4---low-level-numerics-and-performance)**
+- **[Phase 5 - Neural Network from Scratch](#phase-5---neural-network-from-scratch)**
+- **[Standalone - A Linear Programming Engine](#standalone---a-linear-programming-engine)**
+- **[Phase 6 - Interpreter / Compiler](#phase-6---interpreter--compiler)**
+- **[Phase 7 - Science Simulator (Open-ended)](#phase-7---science-simulator-open-ended)**
+
+---
+
 ## Phase 1 - Foundations
 **Goal:** Get comfortable enough with C syntax, memory, and tooling to build something small but real.
 
