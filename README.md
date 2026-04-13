@@ -4,6 +4,8 @@ A self-directed curriculum for learning C, structured in phases. Each phase cove
 
 > Planned collaboratively with AI assistance and updated as I progress through and review each phase.
 
+---
+
 ## Phase 1 - Foundations
 **Goal:** Get comfortable enough with C syntax, memory, and tooling to build something small but real.
 
@@ -12,9 +14,12 @@ A self-directed curriculum for learning C, structured in phases. Each phase cove
 - Primitive types, operators, control flow
 - Functions, scope, stack frames (mental model, not assembly)
 - Arrays and pointer arithmetic (the core of Phase 1)
+- Pointers to pointers, pointer-to-struct patterns
 - Strings as `char` arrays, `<string.h>`
 - Structs and basic typedef patterns
 - Manual memory: `malloc`, `free`, `calloc`, heap vs stack
+- Dynamic arrays: geometric growth with `realloc`
+- Header files, multi-file projects, `#include` guards
 - File I/O: `fopen`, `fread`, `fwrite`, `fclose`
 - `<stdio.h>`, `<stdlib.h>`, `<string.h>` (the everyday headers)
 - Basic debugging: `gdb`, `valgrind` for memory leaks
@@ -22,7 +27,7 @@ A self-directed curriculum for learning C, structured in phases. Each phase cove
 
 ### Resources
 - [*C Programming Full Course for free*](https://youtu.be/xND0t1pr3KY?si=HhqefSVryw13gdQV) (for setup and basics)
-- *The C Programming Language* (K&R): read chapters 1–6 alongside the project, not before
+- *The C Programming Language* (Kernighan & Ritchie): read chapters 1–6 alongside the project, not before
 
 ### Project - `cjson`: A minimal JSON parser
 Parse a subset of JSON (strings, numbers, booleans, null, nested objects, arrays) from a file into a C struct tree, then pretty-print it back.
@@ -33,28 +38,52 @@ Parse a subset of JSON (strings, numbers, booleans, null, nested objects, arrays
 
 **Completed Example:** [cjson](https://github.com/WillEdgington/cjson)
 
-## Phase 2 - Memory, Data Structures, and the C Idiom
-**Goal:** Own memory explicitly. Build the data structures I've taken for granted in Python/JS.
+---
+
+## Phase 2 - Data Structures and the C Idiom
+**Goal:** Build common data structures that can be taken for granted in high-level languages. Own memory at a deeper level.
 
 ### Concepts
-- Pointers to pointers, pointer-to-struct patterns
-- Dynamic arrays (realloc growth strategy)
 - Linked lists, doubly linked lists
-- Hash maps - open addressing or chaining
-- Function pointers - syntax and use cases
-- Header files, multi-file projects, `#include` guards
+- Hash maps: open addressing or chaining (your choice)
+- Generic programming via `void *`: Handling data without knowing its type at compile-time.
+- Function pointers: syntax and use cases
 - `#define` macros vs `static inline` functions
-- Error handling patterns in C (return codes, errno)
+- Error handling patterns in C (return codes, `errno`)
 - Bit manipulation basics
 
 ### Resources
-- K&R chapters 6–8
-- *Hacking: The Art of Exploitation* ch. 1–2 (optional, great for memory intuition)
+- *The C Programming Language* (Kernighan & Ritchie): read chapters 6–8
+- *Hacking\: The Art of Exploitation* (Jon Erickson): chapters 1–2 (optional, great for memory intuition)
+
+### Project - `clib`: A Generic Data Structure Library
+Build a reusable C library providing fundamental data structures (Vector, HashMap, LinkedList) designed to handle generic data using `void *`.
+
+**Why:** In C, you don't get a standard collections library; you have to build your own. This project forces you to master **generic programming** (managing `item_size` and memory offsets), **function pointers** (for custom comparators and destructors), and **API design**. It transitions you from writing "programs" to writing "tools" that you will actually import and use in every subsequent phase of this curriculum.
+
+**Stretch:** Implement a **Region-based (Arena) Allocator**. Instead of hundreds of individual malloc calls, pre-allocate a large block of memory and serve your data structures from it. This provides a massive performance boost and simplifies memory management; freeing the entire Arena at once avoids complex "deep-freeing" of nested structures.
+
+---
+
+## Phase 2.5 - Bridging Data Structures and Systems
+**Goal:** Apply [Phase 2](#phase-2---data-structures-and-the-c-idiom) data structure skills in a networked context before moving to full OS interaction in [Phase 3](#phase-3---systems-thinking).
+
+### Concepts
+- TCP sockets: `socket`, `bind`, `listen`, `accept`, `send`, `recv`
+- The HTTP/1.1 request/response format
+- Parsing raw byte streams
+- Dynamic string buffers for request and response construction
+- Basic file serving: reading files and writing them to a socket
+
+### Resources
+- *Computer Systems: A Programmer's Perspective* (CS:APP): chapter 11 (network programming)
+- RFC 7230 (HTTP/1.1 message syntax): skim the relevant sections, not cover to cover
+- Linux `man` pages for socket APIs
 
 ### Project - `chttp`: A minimal HTTP/1.1 server
 Accept TCP connections, parse raw HTTP GET requests, serve static files from a directory, return correct status codes (200, 404, 405).
 
-**Why:** Requires sockets (`<sys/socket.h>`), string parsing, dynamic buffers, and multi-file project structure. Satisfying - you can curl it or open it in a browser.
+**Why:** Requires sockets, string parsing, and dynamic buffers; a natural extension of [Phase 2](#phase-2---data-structures-and-the-c-idiom) skills into a networked context. Satisfying to test: you can curl it or open it in a browser.
 
 **Stretch:** Handle multiple concurrent connections with `fork()` or `select()`.
 
@@ -73,7 +102,7 @@ Accept TCP connections, parse raw HTTP GET requests, serve static files from a d
 - Address space layout: text, data, BSS, heap, stack
 
 ### Resources
-- *Computer Systems: A Programmer's Perspective* (CS:APP) - chapters 8 (exceptional control flow) and 10 (system-level I/O)
+- *Computer Systems: A Programmer's Perspective* (CS:APP): chapters 8 (exceptional control flow) and 10 (system-level I/O)
 - Linux `man` pages
 
 ### Project - `csh`: A Unix shell
@@ -220,4 +249,4 @@ SDL2 is well-documented and the basics are achievable in a day or two - it doesn
 - During development, always build with `-fsanitize=address,undefined`. Strip for release builds.
 - `valgrind --leak-check=full` on every project before calling it done.
 - Write a `Makefile` for every project from Phase 1 onwards.
-- Read other people's C - the Redis source (`src/`) and SQLite amalgamation are both excellent references.
+- Read other people's C - the [Redis](https://github.com/redis/redis) source (`src/`) and [SQLite](https://github.com/sqlite/sqlite) amalgamation are both excellent references.
