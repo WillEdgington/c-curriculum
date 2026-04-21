@@ -41,6 +41,7 @@ A self-directed curriculum for learning C, structured in phases. Each phase cove
 
 ### Resources
 - [*C Programming Full Course for free*](https://youtu.be/xND0t1pr3KY?si=HhqefSVryw13gdQV) (for setup and basics)
+- [Learn Makefiles](https://makefiletutorial.com) (great for understanding `Makefile`, the build graph and automation)
 - *The C Programming Language* (Kernighan & Ritchie): read chapters 1–6 alongside the project, not before
 
 ### Project - `cjson`: A minimal JSON parser
