@@ -43,6 +43,7 @@ A self-directed curriculum for learning C, structured in phases. Each phase cove
 - [*C Programming Full Course for free*](https://youtu.be/xND0t1pr3KY?si=HhqefSVryw13gdQV) (for setup and basics)
 - [Learn Makefiles](https://makefiletutorial.com) (great for understanding `Makefile`, the build graph and automation)
 - *The C Programming Language* (Kernighan & Ritchie): read chapters 1–6 alongside the project, not before
+- *Managing Projects with GNU Make - Third Edition* (Mecklenburg): for mastering complex multi-target builds (optional, not so much a need this early on but worth a skim)
 
 ### Project - `cjson`: A minimal JSON parser
 Parse a subset of JSON (strings, numbers, booleans, null, nested objects, arrays) from a file into a C struct tree, then pretty-print it back.
@@ -51,7 +52,7 @@ Parse a subset of JSON (strings, numbers, booleans, null, nested objects, arrays
 
 **Stretch:** Add a query interface supporting dot-separated path traversal across nested objects and arrays (e.g. `json_get_path(root, "users.0.name")` returns the matching node).
 
-**Completed Example:** [cjson](https://github.com/WillEdgington/cjson)
+**Completed Example:** [`cjson`](https://github.com/WillEdgington/cjson)
 
 ---
 
@@ -60,23 +61,30 @@ Parse a subset of JSON (strings, numbers, booleans, null, nested objects, arrays
 
 ### Concepts
 - Linked lists, doubly linked lists
-- Hash maps: open addressing or chaining (your choice)
-- Generic programming via `void *`: Handling data without knowing its type at compile-time.
+- Hash maps: open addressing and chaining
+- Generic programming via `void *`: Handling data without knowing its type at compile-time
 - Function pointers: syntax and use cases
+- Arena (Region-based) Allocation: Slab-based memory management to reduce fragmentation and malloc overhead
+- Cache Locality: How physical memory layout and slab size impact CPU throughput
+- Performance Profiling: Measuring throughput (ns/op) and memory footprint (RSS)
 - `#define` macros vs `static inline` functions
 - Error handling patterns in C (return codes, `errno`)
-- Bit manipulation basics
 
 ### Resources
 - *The C Programming Language* (Kernighan & Ritchie): read chapters 6–8
 - *Hacking\: The Art of Exploitation* (Jon Erickson): chapters 1–2 (optional, great for memory intuition)
+- *C Interfaces and Implementations* (David R. Hanson): for modular library design (optional, recommended if you are looking for something to read to cement your understanding)
+- *Test-Driven Development for Embedded C* (James W. Grenning): for establishing a test-first workflow in C (optional, again, but great for solidifying understanding)
+- [MinUnit](https://jera.com/techinfo/jtns/jtn002): A minimal testing framework for verification (worth a look through to inspire your own test framework)
 
 ### Project - `clib`: A Generic Data Structure Library
-Build a reusable C library providing fundamental data structures (Vector, HashMap, LinkedList) designed to handle generic data using `void *`.
+Build a reusable C library providing fundamental data structures (Vector, HashMap, Arena Allocator) designed to handle generic data using `void *`. Adopt a **TDD** workflow: define the interface in a header, write failing unit tests, implement the logic, and verify that all tests pass. This requires a `Makefile` capable of **multi-target builds** to separate production code from the test suite (e.g. `make` for the library and `make test` for the unit tests).
 
-**Why:** In C, you don't get a standard collections library; you have to build your own. This project forces you to master **generic programming** (managing `item_size` and memory offsets), **function pointers** (for custom comparators and destructors), and **API design**. It transitions you from writing "programs" to writing "tools" that you will actually import and use in every subsequent phase of this curriculum.
+**Why:** In C, you don't get a standard collections library; you have to build your own. This project forces you to master **generic programming** (managing item_size and memory offsets), **API design**, and **memory architecture**. It transitions you from writing "programs" to writing "tools" that you will import and use in every subsequent phase of this curriculum.
 
-**Stretch:** Implement a **Region-based (Arena) Allocator**. Instead of hundreds of individual malloc calls, pre-allocate a large block of memory and serve your data structures from it. This provides a massive performance boost and simplifies memory management; freeing the entire Arena at once avoids complex "deep-freeing" of nested structures.
+**Stretch:** Implement a **Binary Heap** (Min/Max) and a **Performance Benchmarking** suite. The suite should measure execution time and physical memory impact (RSS) to analyze implementation trade-offs (e.g. comparing chaining vs. open-addressing under high collision rates).
+
+**Completed Example:** [`clib`](https://github.com/WillEdgington/clib)
 
 ---
 
