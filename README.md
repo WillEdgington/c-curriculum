@@ -1,8 +1,12 @@
 # c-curriculum
 
-A self-directed curriculum for learning C, structured in phases. Each phase covers the concepts needed to tackle a project slightly beyond current ability, forcing learn as you go. Concepts are introduced before the project that needs them, but kept brief - the project is where understanding solidifies.
+A self-directed, project-based curriculum for learning C, structured in phases. Each phase covers the concepts needed to tackle a project slightly beyond current ability, forcing "learn as you go". Concepts are introduced before the project that needs them, with multiple resources and rabbit holes to dig into (if you choose to do so). The resources are loose and suggestive as the main emphasis is on the projects.
 
-> Planned collaboratively with AI assistance and updated as I progress through and review each phase.
+I believe the most important skill for anyone in software is to "learn how to learn". It is important to be able to seek out the knowledge and understanding of a tool or concept that you need for the thing you are building to the point where you can have complete ownership over your implementation. Like a mouse to cheese. This curriculum does not have the cheese; it just provides a few stinks.
+
+I constructed this curriculum for my own personal use to learn C and low-level computing. Therefore, it is recommended to have some coding/computer science knowledge before working through this curriculum (just enough not to be intimidated and too confused by the concepts).
+
+> Planned collaboratively with AI assistance and updated as I progress through and review each phase. Currently at [Phase 2.5](#phase-25---bridging-data-structures-and-systems), anything further along has not been "battle tested" and refined by me yet.
 
 ---
 
