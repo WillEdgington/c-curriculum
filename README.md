@@ -6,7 +6,7 @@ I believe the most important skill for anyone in software is to "learn how to le
 
 I constructed this curriculum for my own personal use to learn C and low-level computing. Therefore, it is recommended to have some coding/computer science knowledge before working through this curriculum (just enough not to be intimidated and too confused by the concepts).
 
-> Planned collaboratively with AI assistance and updated as I progress through and review each phase. Currently at [Phase 2.5](#phase-25---bridging-data-structures-and-systems), anything further along has not been "battle tested" and refined by me yet.
+> Planned collaboratively with AI assistance and updated as I progress through and review each phase. Currently at [Phase 3](#phase-3---systems-thinking), anything further along has not been "battle tested" and refined by me yet.
 
 ---
 
@@ -86,7 +86,7 @@ Build a reusable C library providing fundamental data structures (Vector, HashMa
 
 **Why:** In C, you don't get a standard collections library; you have to build your own. This project forces you to master **generic programming** (managing item_size and memory offsets), **API design**, and **memory architecture**. It transitions you from writing "programs" to writing "tools" that you will import and use in every subsequent phase of this curriculum.
 
-**Stretch:** Implement a **Binary Heap** (Min/Max) and a **Performance Benchmarking** suite. The suite should measure execution time and physical memory impact (RSS) to analyze implementation trade-offs (e.g. comparing chaining vs. open-addressing under high collision rates).
+**Stretch:** Implement a **Binary Heap** (Min/Max) and a **Performance Benchmarking** suite. The suite should measure execution time and physical memory impact (RSS) to analyse implementation trade-offs (e.g. comparing chaining vs. open-addressing under high collision rates).
 
 **Completed Example:** [`clib`](https://github.com/WillEdgington/clib)
 
@@ -97,22 +97,32 @@ Build a reusable C library providing fundamental data structures (Vector, HashMa
 
 ### Concepts
 - TCP sockets: `socket`, `bind`, `listen`, `accept`, `send`, `recv`
-- The HTTP/1.1 request/response format
-- Parsing raw byte streams
-- Dynamic string buffers for request and response construction
-- Basic file serving: reading files and writing them to a socket
+- The HTTP/1.1 request/response format and Keep-Alive connection lifecycles
+- Parsing raw byte streams and leveraging generic data structures (e.g., `HashMaps` for headers)
+- Memory Isolation: Using Arena allocators for request-scoped memory without heap fragmentation
+- Concurrency: POSIX threads (`pthreads`), mutexes, condition variables, and thread pools
+- Network Guardrails: Socket timeouts (`SO_RCVTIMEO`) and preventing resource starvation (Slowloris)
+- Basic file serving: securely resolving paths, reading files, and writing them to a socket
 
 ### Resources
-- *Computer Systems: A Programmer's Perspective* (CS:APP): chapter 11 (network programming)
+- *Computer Systems: A Programmer's Perspective* (CS:APP): chapter 11 (network programming) and chapter 12 (concurrent programming)
 - RFC 7230 (HTTP/1.1 message syntax): skim the relevant sections, not cover to cover
-- Linux `man` pages for socket APIs
+- [LLNL POSIX Threads Programming](https://hpc-tutorials.llnl.gov/posix/) (an excellent primer on `pthreads`, mutexes, and condition variables)
+- Linux `man` pages for socket and pthread APIs
 
 ### Project - `chttp`: A minimal HTTP/1.1 server
-Accept TCP connections, parse raw HTTP GET requests, serve static files from a directory, return correct status codes (200, 404, 405).
+Accept TCP connections, parse raw HTTP GET requests, serve static files from a directory, return correct status codes (`200`, `404`, `405`). 
 
-**Why:** Requires sockets, string parsing, and dynamic buffers; a natural extension of [Phase 2](#phase-2---data-structures-and-the-c-idiom) skills into a networked context. Satisfying to test: you can curl it or open it in a browser.
+**Why:** Requires sockets, robust string parsing, and dynamic buffers. This is a natural extension of [Phase 2](#phase-2---data-structures-and-the-c-idiom) skills into a networked context, forcing you to use your custom data structures to solve real-world parsing and routing problems. Highly satisfying to test: you can curl it or open it in a browser.
 
-**Stretch:** Handle multiple concurrent connections with `fork()` or `select()`.
+**Stretch Ideas:**
+- **Concurrency Engine:** Implement a fixed-size worker thread pool to handle concurrent clients without blocking the main listener thread.
+- **Keep-Alive & Security:** Implement connection reuse (`Connection: keep-alive`) and apply socket timeouts to prevent thread hijacking and resource starvation.
+- **System Configuration:** Build a parser for a localised configuration file (e.g., `server.toml`) to customise ports, thread counts, and memory footprints at boot.
+- **Thread-Safe Auditing:** Create a synchronised logging module protected by a global mutex to record HTTP traffic and system diagnostics without race conditions.
+- **Dynamic Templating:** Replace hardcoded error strings with a templating engine that reads HTML files and injects dynamic variables at the correct namespaces (like `{status_code}`).
+
+**Completed Example:** [`chttp`](https://github.com/WillEdgington/chttp)
 
 ---
 
