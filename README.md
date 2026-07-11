@@ -6,7 +6,7 @@ I believe the most important skill for anyone in software is to "learn how to le
 
 I constructed this curriculum for my own personal use to learn C and low-level computing. Therefore, it is recommended to have some coding/computer science knowledge before working through this curriculum (just enough not to be intimidated and too confused by the concepts).
 
-> Planned collaboratively with AI assistance and updated as I progress through and review each phase. Currently at [Phase 3](#phase-3---systems-thinking), anything further along has not been "battle tested" and refined by me yet.
+> Planned collaboratively with AI assistance and updated as I progress through and review each phase. Currently at [Phase 4](#phase-4---low-level-numerics-and-performance), anything further along has not been "battle tested" and refined by me yet.
 
 ---
 
@@ -127,27 +127,42 @@ Accept TCP connections, parse raw HTTP GET requests, serve static files from a d
 ---
 
 ## Phase 3 - Systems Thinking
-**Goal:** Understand how C sits on top of the OS. Build something that interacts directly with the system.
+**Goal:** Understand how C sits on top of the operating system kernel. Transition from writing standard standalone programs to orchestrating isolated execution environments and interacting directly with low-level system states.
 
 ### Concepts
-- Process model: `fork`, `exec`, `wait`, `pipe`
-- File descriptors, `dup2`, redirection
-- Signals: `SIGINT`, `SIGCHLD`, `signal()`
-- Environment variables
-- `mmap` and memory-mapped files (intro level)
-- Makefiles - proper multi-target builds, dependency tracking
-- Address space layout: text, data, BSS, heap, stack
+- Process execution model: process duplication (`fork`), image replacement (`execvp`), synchronous harvesting (`waitpid`), and status isolation
+- Inter-process communication (IPC): N-stage rolling file descriptor allocation loops and data stream piping (`pipe`)
+- Resource redirection: low-level input/output file descriptor manipulation and tracking via `dup2`
+- Terminal I/O stewardship: shifting between standard line-buffered (canonical) mode and raw character-by-character input mode via `termios` adjustments (`tcsetattr`, `ICANON`, `ECHO`)
+- Advanced signal topology: configuring signal barriers, child tracking notifications (`SIGCHLD`), and parental masking of foreground-control signals (`SIGTSTP`, `SIGTTIN`, `SIGTTOU`)
+- Job control mechanics: establishing isolated process group boundaries (`setpgid`), manipulating terminal control group ownership (`tcsetpgrp`), and harvesting state changes (`WNOHANG | WUNTRACED | WCONTINUED`)
+- Stream directory manipulation: reading and traversing environment paths and file system pointers (`opendir`, `readdir`)
+- Structural execution tracking: single-linked pipeline list compilation and short-circuit routing logic
 
 ### Resources
 - *Computer Systems: A Programmer's Perspective* (CS:APP): chapters 8 (exceptional control flow) and 10 (system-level I/O)
-- Linux `man` pages
+- Linux `man` pages for `fork`, `execvp`, `waitpid`, `pipe`, `dup2`, `termios`, and `tcsetpgrp`
+- The Redis source code (`src/sds.c` or general loop handling) for structural intuition on low-level buffer management
 
-### Project - `csh`: A Unix shell
-Support command execution, `|` pipes, `<`/`>` redirection, background jobs (`&`), built-ins (`cd`, `exit`, `export`).
+### Project - `cshell`: A Unix-compliant Command Line Shell
+Build an interactive command-line interface that evaluates multi-stage execution pipelines, safely manages stream resources across disk boundaries, and routes parent environmental modifications natively without subshell degradation.
 
-**Why:** Directly exercises the process model, file descriptors, and signal handling. Classic systems project for good reason.
+**Why:** A shell forces you to take complete ownership over process boundaries, asynchronous events, and the system file descriptor layout. It acts as the ultimate bridge between software logic and kernel state, requiring meticulous descriptor hygiene and bulletproof memory determinism to prevent deadlocks or leaks.
 
-**Stretch:** Job control (`fg`, `bg`, `jobs`), history with arrow keys via `termios`.
+**Core Ideas:**
+- **Workspace-Aware Prompt:** Implement a custom REPL loop that prints a live prompt string displaying the current working directory. Optimise terminal screen real estate by dynamically truncating the user's `$HOME` path prefix to a clean `~` shorthand notation.
+- **Environment & Process Mutators:** Intercept and route state-altering instructions natively within the parent process context. Implement `exit` to break the control loop, `cd` leveraging `chdir()`, and `export KEY=VALUE` using `setenv()` to alter the process block.
+- **Arbitrary N-Stage Pipelines:** Orchestrate execution chains containing an arbitrary number of external commands separated by `|` tokens. Utilise a rolling descriptor rotation scheme to connect standard output to downstream standard input without leaking parent resources.
+- **Low-Level Stream Redirection:** Intercept file markers (`<` and `>`) to safely divert byte streams across disk boundaries using `dup2()`. Ensure standard built-ins preserve subshell isolation rules: running natively when called standalone, but cascading smoothly into isolated child scopes when piped.
+
+**Stretch Ideas:**
+- **Job Control & Process Suspension:** Establish distinct process groups for execution chains. Intercept `CTRL+Z` signal boundaries to suspend foreground tasks, log lifecycle state transitions within a persistent tracking table, and implement built-in commands (`jobs`, `fg`, `bg`) to shift group boundaries dynamically.
+- **Raw-Mode Input & Line Editing:** Replace standard block-buffered file streams with a raw terminal interaction engine. Build an ANSI escape sequence state machine capable of tracking cursors logically, handling mid-line gap text modifications, and performing instant viewport erasures (`CTRL+L`) without breaking current input states.
+- **Interactive Tab Completion:** Intercept the horizontal tab character (`\t`) within your input reader to run prefix matches. Scan active system binary paths or local directories via system pointers to finish tokens inline, expanding the engine to render a multi-column, aligned selection grid on ambiguous double-tab interactions.
+- **Short-Circuit Pipeline Chaining:** Upgrade the lexical analyzer and parser to compile sequential lines into a linked list of independent pipelines connected by logical operators (`&&` and `||`). Route evaluations through a central dispatcher that enforces short-circuit rules based on the live exit status parameter (`$?`).
+- **Synchronous Startup Configurations:** Extract your file-scanning routines into a reusable stream utility module. Use it during the initialisation sequence to locate, parse, and evaluate configuration commands within an optional `~/.cshellrc` boot profile before rendering the primary prompt environment.
+
+**Completed Example:** [`cshell`](https://github.com/WillEdgington/cshell)
 
 ---
 
