@@ -167,30 +167,38 @@ Build an interactive command-line interface that evaluates multi-stage execution
 ---
 
 ## Phase 4 - Low-Level Numerics and Performance
-**Goal:** Learn how C handles numbers at the hardware level - essential groundwork for the neural network.
+**Goal:** Learn how hardware handles numeric primitives, floating-point limitations, and memory cache dimensions. Build a high-performance vector and matrix math engine from scratch to serve as the structural backbone for the subsequent neural network phase.
 
 ### Concepts
-- IEEE 754 floating point - representation, precision, NaN, inf
-- `float` vs `double` - when each matters
-- SIMD intuition (won't write intrinsics yet, but understand what the compiler can do)
-- Cache locality - row-major vs column-major access patterns, why it matters for matrix ops
-- Profiling: `gprof`, `perf`, or just `clock()` - profile before optimising, always
-- Compiler optimisation flags: `-O0` vs `-O2` vs `-O3`, and what the compiler is actually doing
-- `static`, `inline`, and `const` as optimisation hints
-- `restrict` keyword, `const` correctness
-- Fixed-size integer types: `int32_t`, `uint8_t` etc. (`<stdint.h>`)
-- Basic linear algebra in C: matrix multiply, dot product, transpose - written by hand
+- IEEE 754 floating-point architecture: bitwise layout, precision limits, rounding drops, and handling NaN/Inf states
+- Data density trade-offs: `float` vs `double` footprint sizes and spatial efficiency metrics
+- Cache-aware programming: Row-Major vs. Column-Major matrix layout traversal and its physical CPU throughput impact
+- Compiler optimisation dynamics: Decoding loop vectorisation, pointer aliasing hints (`restrict`), and optimisation boundaries (`-O2`/`-O3`)
+- Benchmarking mechanics: Tracking raw clock cycle metrics, arithmetic density ($GFLOPS$), and operational scales
+- Software profiling tools: Isolating performance hotspots via hardware counters or execution graph tracking (`perf`, `gprof`)
 
 ### Resources
-- *What Every Computer Scientist Should Know About Floating-Point Arithmetic* (Goldberg) - skim, don't memorise
-- CS:APP chapter 2 (data representation)
+- *What Every Computer Scientist Should Know About Floating-Point Arithmetic* (David Goldberg): read the foundational sections on precision loss
+- *Computer Systems: A Programmer's Perspective* (CS:APP): chapter 2 (data representation) and chapter 6 (memory hierarchy)
+- Intel/AMD Optimisation Reference Manuals: browse sections highlighting matrix-multiply loop transformations (optional rabbit hole)
 
-### Project - `matlib`: A matrix operations library
-Implement a small matrix library: creation, addition, elementwise multiply, matrix multiply, transpose, scalar ops. Backed by flat `float` arrays. Include a basic benchmark comparing naive vs cache-friendly implementations.
+### Project - `matlib`: A High-Performance Linear Algebra Primitives Library
+Implement a highly optimised matrix mathematics library backed by flat 1D floating-point allocations. Build a companion benchmarking suite to analyze how algorithm structure impacts hardware performance.
 
-**Why:** The direct precursor to the neural network. By the end I'll have the exact primitives needed, and understand *why* they're written the way they are.
+**Why:** A neural network requires millions of mathematical mutations per iteration. If your underlying linear algebra code is poorly structured, training models will be completely intractable. Writing this library from scratch forces you to bridge abstract mathematical formulas with physical hardware constraints like CPU L1/L2/L3 caches.
 
-**Stretch:** Add basic BLAS-style naming conventions; implement a simple softmax and sigmoid over a matrix.
+**Core Baseline Requirements:**
+Your computational engine must fully implement these primary linear algebra operations before exploring aggressive tuning passes:
+- **Flat Memory Primitives:** Matrix allocation, zero-initialisation, and random uniform seeding structures backed exclusively by 1D continuous arrays to enforce contiguous memory layouts.
+- **Fundamental Transformations:** Implement clean, hand-rolled algorithms for matrix addition, subtraction, scalar operations, and transposition.
+- **The Core Primitives:** Matrix-matrix multiplication ($C = A \times B$) and matrix-vector dot products. Ensure strict dimension verification guards are active.
+- **Activation Functions:** Implement element-wise activations directly on the matrix blocks, providing native operations for Sigmoid, Softmax, and ReLU functions.
+
+**Stretch Ideas:**
+- **Cache-Conscious Tiling:** Refactor the baseline matrix multiplication loops into a blocked/tiled architecture. Match tile dimensions to local CPU L1/L2 cache boundaries to maximize line reuse and minimize execution misses.
+- **Memory Aliasing Minimization:** Audit function signatures to introduce the `restrict` keyword and `const` guarantees, removing compiler pointer-aliasing barriers to unlock auto-vectorisation ($SIMD$).
+- **The Execution Benchmark Suite:** Build a precision profiling harness using `clock_gettime` or high-resolution cycle counters. Calculate $GFLOPS$ and memory throughput metrics to compare the naive loop implementations directly against the cache-tiled variations.
+- **Automated Verification Harness:** Integrate a custom testing module that performs relative error evaluations (e.g., $|A - B| < \epsilon$) rather than direct floating-point identity checks (`==`) to safely verify correctness across varied compiler optimisation tiers.
 
 ---
 
