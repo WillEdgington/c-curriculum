@@ -2,8 +2,6 @@
 
 A self-directed, project-based curriculum for learning C, structured in phases. Each phase covers the concepts needed to tackle a project slightly beyond current ability, forcing "learn as you go". Concepts are introduced before the project that needs them, with multiple resources and rabbit holes to dig into (if you choose to do so). The resources are loose and suggestive as the main emphasis is on the projects.
 
-I believe the most important skill for anyone in software is to "learn how to learn". It is important to be able to seek out the knowledge and understanding of a tool or concept that you need for the thing you are building to the point where you can have complete ownership over your implementation. Like a mouse to cheese. This curriculum does not have the cheese; it just provides a few stinks.
-
 I constructed this curriculum for my own personal use to learn C and low-level computing. Therefore, it is recommended to have some coding/computer science knowledge before working through this curriculum (just enough not to be intimidated and too confused by the concepts).
 
 > Planned collaboratively with AI assistance and updated as I progress through and review each phase. Currently at [Phase 4](#phase-4---low-level-numerics-and-performance), anything further along has not been "battle tested" and refined by me yet.
@@ -12,15 +10,25 @@ I constructed this curriculum for my own personal use to learn C and low-level c
 
 ## Contents
 
+- **[Running Themes Throughout](#running-themes-throughout)**
 - **[Phase 1 - Foundations](#phase-1---foundations)**
 - **[Phase 2 - Data Structures and the C Idiom](#phase-2---data-structures-and-the-c-idiom)**
   - **[Phase 2.5 - Bridging Data Structures and Systems](#phase-25---bridging-data-structures-and-systems)**
 - **[Phase 3 - Systems Thinking](#phase-3---systems-thinking)**
 - **[Phase 4 - Low-Level Numerics and Performance](#phase-4---low-level-numerics-and-performance)**
 - **[Phase 5 - Neural Network from Scratch](#phase-5---neural-network-from-scratch)**
-- **[Standalone - A Linear Programming Engine](#standalone---a-linear-programming-engine)**
 - **[Phase 6 - Interpreter / Compiler](#phase-6---interpreter--compiler)**
 - **[Phase 7 - Science Simulator (Open-ended)](#phase-7---science-simulator-open-ended)**
+- **[Extra-Curriculum Projects](#extra-curriculum-projects)**
+  - **[Linear Programming Engine](#linear-programming-engine)**
+---
+
+## Running Themes Throughout
+- Always compile with `-Wall -Wextra -pedantic`. Fix every warning.
+- During development, always build with `-fsanitize=address,undefined`. Strip for release builds.
+- `valgrind --leak-check=full` on every project before calling it done.
+- Write a `Makefile` for every project from Phase 1 onwards.
+- Read other people's C - the [Redis](https://github.com/redis/redis) source (`src/`) and [SQLite](https://github.com/sqlite/sqlite) amalgamation are both excellent references.
 
 ---
 
@@ -228,32 +236,6 @@ Build a library supporting arbitrarily deep dense networks. Train it on MNIST (h
 
 ---
 
-## Standalone - A Linear Programming Engine
-**Goal:** Build a language and solver engine for linear programming mathematics in C.
-
-### Concepts
-- Lexing and parsing a domain-specific language for expressing linear programs
-- The simplex method: tableau representation, pivoting, basis selection, standard form
-- Slack variables, dual variables, shadow prices, reduced costs
-- Detecting infeasible and unbounded problems
-- Numerical stability considerations in iterative matrix algorithms
-
-### Resources
-- *Introduction to Linear Programming* (Bertsimas & Tsitsiklis): chapters 1–3 for the theory
-- Understand the simplex algorithm by hand before implementing it
-- `matlib` from [Phase 4](#phase-4---low-level-numerics-and-performance) as the computational backend
-
-### Project - `clp`: A Linear Programming Engine
-Build a tool that lets you express a linear program in a natural language format and solves it, reporting a full solution: primal variables, objective value, slacks, duals, and reduced costs.
-
-**Why:** Combines language front-end work with numerical computing. Linear programming appears throughout operations research, economics, logistics, and machine learning. Open-ended enough to keep iterating on and potentially useful to others.
-
-**Stretch:** Two-phase simplex for problems without an obvious initial feasible point. Minimisation and maximisation. Sensitivity analysis. A library interface so the solver can be embedded in other projects.
-
-**Placement:** After [Phase 5](#phase-5---neural-network-from-scratch) (`matlib` primitives available), before [Phase 6](#phase-6---interpreter--compiler) (warms up lexer and parser thinking without the full complexity of a general language).
-
----
-
 ## Phase 6 - Interpreter / Compiler
 **Goal:** Build a working interpreted language in C.
 
@@ -304,9 +286,31 @@ SDL2 is well-documented and the basics are achievable in a day or two - it doesn
 
 ---
 
-## Running themes throughout
-- Always compile with `-Wall -Wextra -pedantic`. Fix every warning.
-- During development, always build with `-fsanitize=address,undefined`. Strip for release builds.
-- `valgrind --leak-check=full` on every project before calling it done.
-- Write a `Makefile` for every project from Phase 1 onwards.
-- Read other people's C - the [Redis](https://github.com/redis/redis) source (`src/`) and [SQLite](https://github.com/sqlite/sqlite) amalgamation are both excellent references.
+## Extra-Curriculum Projects
+
+This is a list of project ideas outside of the main phases that might be enjoyable to build. Some of these could be quite complex and some might involve using a project built during the main contents of the curriculum as a dependency. For this reason, I have given each project a rating as to when is the earliest recommended time in the curriculum to tackle it. Although, the ideal pathway would be to follow the curriculum to the end before giving these a go.
+
+---
+
+## Linear Programming Engine
+**Rating:** After [Phase 4](#phase-4---low-level-numerics-and-performance)
+**Goal:** Build a language and solver engine for linear programming mathematics in C.
+
+### Concepts
+- Lexing and parsing a domain-specific language for expressing linear programs
+- The simplex method: tableau representation, pivoting, basis selection, standard form
+- Slack variables, dual variables, shadow prices, reduced costs
+- Detecting infeasible and unbounded problems
+- Numerical stability considerations in iterative matrix algorithms
+
+### Resources
+- *Introduction to Linear Programming* (Bertsimas & Tsitsiklis): chapters 1–3 for the theory
+- Understand the simplex algorithm by hand before implementing it
+- `matlib` from [Phase 4](#phase-4---low-level-numerics-and-performance) as the computational backend
+
+### Project - `clp`: A Linear Programming Engine
+Build a tool that lets you express a linear program in a natural language format and solves it, reporting a full solution: primal variables, objective value, slacks, duals, and reduced costs.
+
+**Why:** Combines language front-end work with numerical computing. Linear programming appears throughout operations research, economics, logistics, and machine learning. Open-ended enough to keep iterating on and potentially useful to others.
+
+**Stretch:** Two-phase simplex for problems without an obvious initial feasible point. Minimisation and maximisation. Sensitivity analysis. A library interface so the solver can be embedded in other projects.
