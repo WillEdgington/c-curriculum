@@ -10,17 +10,18 @@ I constructed this curriculum for my own personal use to learn C and low-level c
 
 ## Contents
 
-- **[Running Themes Throughout](#running-themes-throughout)**
-- **[Phase 1 - Foundations](#phase-1---foundations)**
-- **[Phase 2 - Data Structures and the C Idiom](#phase-2---data-structures-and-the-c-idiom)**
-  - **[Phase 2.5 - Bridging Data Structures and Systems](#phase-25---bridging-data-structures-and-systems)**
-- **[Phase 3 - Systems Thinking](#phase-3---systems-thinking)**
-- **[Phase 4 - Low-Level Numerics and Performance](#phase-4---low-level-numerics-and-performance)**
-- **[Phase 5 - Neural Network from Scratch](#phase-5---neural-network-from-scratch)**
-- **[Phase 6 - Interpreter / Compiler](#phase-6---interpreter--compiler)**
-- **[Phase 7 - Science Simulator (Open-ended)](#phase-7---science-simulator-open-ended)**
-- **[Extra-Curriculum Projects](#extra-curriculum-projects)**
-  - **[Linear Programming Engine](#linear-programming-engine)**
+- [**Running Themes Throughout**](#running-themes-throughout)
+- [**Phase 1 - Foundations**](#phase-1---foundations)
+- [**Phase 2 - Data Structures and the C Idiom**](#phase-2---data-structures-and-the-c-idiom)
+  - [**Phase 2.5 - Bridging Data Structures and Systems**](#phase-25---bridging-data-structures-and-systems)
+- [**Phase 3 - Systems Thinking**](#phase-3---systems-thinking)
+- [**Phase 4 - Low-Level Numerics and Performance**](#phase-4---low-level-numerics-and-performance)
+- [**Phase 5 - Neural Network from Scratch**](#phase-5---neural-network-from-scratch)
+- [**Phase 6 - Interpreter / Compiler**](#phase-6---interpreter--compiler)
+- [**Phase 7 - Science Simulator (Open-ended)**](#phase-7---science-simulator-open-ended)
+- [**Extra-Curriculum Projects**](#extra-curriculum-projects)
+  - [**C Testing Framework**](#c-testing-framework)
+  - [**Linear Programming Engine**](#linear-programming-engine)
 ---
 
 ## Running Themes Throughout
@@ -292,8 +293,39 @@ This is a list of project ideas outside of the main phases that might be enjoyab
 
 ---
 
+## C Testing Framework
+**Rating:** After [Phase 3](#phase-3---systems-thinking)
+
+**Goal:** Build a lightweight, feature-rich unit testing framework for C that handles process isolation, mock assets, and test discovery.
+
+### Concepts
+- Process isolation: running test suites in child processes using `fork`, `waitpid`, and signal handlers (`sigaction`) to catch segmentation faults, aborts, and timeouts
+- Stream redirection and piping: intercepting and capturing standard output (`stdout`) via `pipe` and `dup2`
+- Macro design: creating clean, ergonomic DSL-like macros (`CTEST`, `ASSERT_INT_EQ`, etc.) for test registration and assertions
+- Automated resource lifecycle management: sandboxing mock files, directories, and compiled binaries with signal-safe teardown (`atexit`)
+- Incremental execution caching: tracking file modification times (`mtime`) to skip unchanged test suites
+
+### Resources
+- [`MinUnit`](https://jera.com/techinfo/jtns/jtn002): A classic minimal testing framework for inspiration
+- [`Unity`](https://github.com/ThrowTheSwitch/Unity): Another testing framework in C
+- [`googletest`](https://github.com/google/googletest): Testing framework for C++. Shows the use of a runner and testing macros
+- Popular testing frameworks in other languages that you may know (e.g. [`Pytest`](https://github.com/pytest-dev/pytest) for Python, [`JUnit`](https://junit.org/) for Java, [`Jest`](https://github.com/jestjs/jest) for JavaScript, [`RSpec`](https://rspec.info/) for Ruby, etc.)
+- POSIX `man` pages for `fork`, `waitpid`, `pipe`, `dup2`, and `sigaction`
+
+### Project - `ctest`: A Custom C Testing Framework
+Build an automated test runner and assertion library that discovers compiled test binaries in a target directory, executes them in parallel worker pools, and produces structured pass/fail reports.
+
+**Why:** Writing a testing framework bridges systems programming ([`Phase 3`](#phase-3---systems-thinking)) with everyday development ergonomics. It forces you to master process control, signal trapping, and robust macro metaprogramming while giving you an indispensable tool you can use across all your future C projects.
+
+**Stretch:** Implement a result caching engine backed by file modification time checks, parallel execution jobs via worker pools, and JSON failure log export.
+
+**Completed Example:** [`ctest`](https://github.com/WillEdgington/ctest)
+
+---
+
 ## Linear Programming Engine
 **Rating:** After [Phase 4](#phase-4---low-level-numerics-and-performance)
+
 **Goal:** Build a language and solver engine for linear programming mathematics in C.
 
 ### Concepts
