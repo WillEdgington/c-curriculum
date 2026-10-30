@@ -107,7 +107,7 @@ Build a reusable C library providing fundamental data structures (Vector, HashMa
 ### Concepts
 - TCP sockets: `socket`, `bind`, `listen`, `accept`, `send`, `recv`
 - The HTTP/1.1 request/response format and Keep-Alive connection lifecycles
-- Parsing raw byte streams and leveraging generic data structures (e.g., `HashMaps` for headers)
+- Parsing raw byte streams and leveraging generic data structures (e.g. `HashMaps` for headers)
 - Memory Isolation: Using Arena allocators for request-scoped memory without heap fragmentation
 - Concurrency: POSIX threads (`pthreads`), mutexes, condition variables, and thread pools
 - Network Guardrails: Socket timeouts (`SO_RCVTIMEO`) and preventing resource starvation (Slowloris)
@@ -127,7 +127,7 @@ Accept TCP connections, parse raw HTTP GET requests, serve static files from a d
 **Stretch Ideas:**
 - **Concurrency Engine:** Implement a fixed-size worker thread pool to handle concurrent clients without blocking the main listener thread.
 - **Keep-Alive & Security:** Implement connection reuse (`Connection: keep-alive`) and apply socket timeouts to prevent thread hijacking and resource starvation.
-- **System Configuration:** Build a parser for a localised configuration file (e.g., `server.toml`) to customise ports, thread counts, and memory footprints at boot.
+- **System Configuration:** Build a parser for a localised configuration file (e.g. `server.toml`) to customise ports, thread counts, and memory footprints at boot.
 - **Thread-Safe Auditing:** Create a synchronised logging module protected by a global mutex to record HTTP traffic and system diagnostics without race conditions.
 - **Dynamic Templating:** Replace hardcoded error strings with a templating engine that reads HTML files and injects dynamic variables at the correct namespaces (like `{status_code}`).
 
@@ -168,7 +168,7 @@ Build an interactive command-line interface that evaluates multi-stage execution
 - **Job Control & Process Suspension:** Establish distinct process groups for execution chains. Intercept `CTRL+Z` signal boundaries to suspend foreground tasks, log lifecycle state transitions within a persistent tracking table, and implement built-in commands (`jobs`, `fg`, `bg`) to shift group boundaries dynamically.
 - **Raw-Mode Input & Line Editing:** Replace standard block-buffered file streams with a raw terminal interaction engine. Build an ANSI escape sequence state machine capable of tracking cursors logically, handling mid-line gap text modifications, and performing instant viewport erasures (`CTRL+L`) without breaking current input states.
 - **Interactive Tab Completion:** Intercept the horizontal tab character (`\t`) within your input reader to run prefix matches. Scan active system binary paths or local directories via system pointers to finish tokens inline, expanding the engine to render a multi-column, aligned selection grid on ambiguous double-tab interactions.
-- **Short-Circuit Pipeline Chaining:** Upgrade the lexical analyzer and parser to compile sequential lines into a linked list of independent pipelines connected by logical operators (`&&` and `||`). Route evaluations through a central dispatcher that enforces short-circuit rules based on the live exit status parameter (`$?`).
+- **Short-Circuit Pipeline Chaining:** Upgrade the lexical analyser and parser to compile sequential lines into a linked list of independent pipelines connected by logical operators (`&&` and `||`). Route evaluations through a central dispatcher that enforces short-circuit rules based on the live exit status parameter (`$?`).
 - **Synchronous Startup Configurations:** Extract your file-scanning routines into a reusable stream utility module. Use it during the initialisation sequence to locate, parse, and evaluate configuration commands within an optional `~/.cshellrc` boot profile before rendering the primary prompt environment.
 
 **Completed Example:** [`cshell`](https://github.com/WillEdgington/cshell)
@@ -176,12 +176,12 @@ Build an interactive command-line interface that evaluates multi-stage execution
 ---
 
 ## Phase 4 - Low-Level Numerics and Performance
-**Goal:** Learn how hardware handles numeric primitives, floating-point limitations, and memory cache dimensions. Build a high-performance vector and matrix math engine from scratch to serve as the structural backbone for the subsequent neural network phase.
+**Goal:** Learn how hardware handles numeric primitives, floating-point limitations, and memory cache dimensions. Build a high-performance linear algebra and N-dimensional tensor engine from scratch to serve as a rigorous mathematical backbone for systems and numerical computing.
 
 ### Concepts
 - IEEE 754 floating-point architecture: bitwise layout, precision limits, rounding drops, and handling NaN/Inf states
 - Data density trade-offs: `float` vs `double` footprint sizes and spatial efficiency metrics
-- Cache-aware programming: Row-Major vs. Column-Major matrix layout traversal and its physical CPU throughput impact
+- Cache-aware programming: Row-Major vs. Column-Major traversal layouts and physical CPU throughput impact
 - Compiler optimisation dynamics: Decoding loop vectorisation, pointer aliasing hints (`restrict`), and optimisation boundaries (`-O2`/`-O3`)
 - Benchmarking mechanics: Tracking raw clock cycle metrics, arithmetic density ($GFLOPS$), and operational scales
 - Software profiling tools: Isolating performance hotspots via hardware counters or execution graph tracking (`perf`, `gprof`)
@@ -191,28 +191,30 @@ Build an interactive command-line interface that evaluates multi-stage execution
 - *Computer Systems: A Programmer's Perspective* (CS:APP): chapter 2 (data representation) and chapter 6 (memory hierarchy)
 - Intel/AMD Optimisation Reference Manuals: browse sections highlighting matrix-multiply loop transformations (optional rabbit hole)
 
-### Project - `matlib`: A High-Performance Linear Algebra Primitives Library
-Implement a highly optimised matrix mathematics library backed by flat 1D floating-point allocations. Build a companion benchmarking suite to analyze how algorithm structure impacts hardware performance.
+### Project - `matlib`: A High-Performance Linear Algebra & Tensor Library
+Implement a dual-layer mathematical engine featuring a specialised 2D `Matrix` optimised for raw throughput and a generalised N-dimensional `Tensor` for multi-way data structures. Build a companion benchmarking suite to analyse how algorithm structure impacts hardware performance.
 
-**Why:** A neural network requires millions of mathematical mutations per iteration. If your underlying linear algebra code is poorly structured, training models will be completely intractable. Writing this library from scratch forces you to bridge abstract mathematical formulas with physical hardware constraints like CPU L1/L2/L3 caches.
+**Why:** Numerical computing requires meticulous memory management and hardware awareness. If your underlying linear algebra code is poorly structured, performance collapses under heavy operations. Writing this library from scratch forces you to bridge abstract mathematical formulas with physical hardware constraints like CPU L1/L2/L3 caches and memory alignment.
 
 **Core Baseline Requirements:**
-Your computational engine must fully implement these primary linear algebra operations before exploring aggressive tuning passes:
-- **Flat Memory Primitives:** Matrix allocation, zero-initialisation, and random uniform seeding structures backed exclusively by 1D continuous arrays to enforce contiguous memory layouts.
-- **Fundamental Transformations:** Implement clean, hand-rolled algorithms for matrix addition, subtraction, scalar operations, and transposition.
-- **The Core Primitives:** Matrix-matrix multiplication ($C = A \times B$) and matrix-vector dot products. Ensure strict dimension verification guards are active.
-- **Activation Functions:** Implement element-wise activations directly on the matrix blocks, providing native operations for Sigmoid, Softmax, and ReLU functions.
+
+Your computational engine must fully implement these primary structures and operations before exploring aggressive tuning passes:
+- **Dual-Layer Architecture:** Implement distinct types for a specialised 2D `Matrix` (contiguous flat allocation optimised for GEMM) and a generalised N-dimensional `Tensor` (stride-based multi-way container).
+- **Memory & Allocation Primitives:** Safe lifecycle management, zero-initialization, random uniform seeding, and explicit memory alignment (`aligned_alloc`) to support vector registers.
+- **Fundamental Transformations:** Clean, hand-rolled algorithms for matrix/tensor addition, subtraction, scalar operations, and transposition.
+- **The Core Primitives:** Highly optimised matrix-matrix multiplication ($C = A \times B$) and vector dot products, designed with strict separation between debug assertions and zero-overhead release execution.
 
 **Stretch Ideas:**
-- **Cache-Conscious Tiling:** Refactor the baseline matrix multiplication loops into a blocked/tiled architecture. Match tile dimensions to local CPU L1/L2 cache boundaries to maximize line reuse and minimize execution misses.
+- **Cache-Conscious Tiling:** Refactor the baseline matrix multiplication loops into a blocked/tiled architecture. Match tile dimensions to local CPU L1/L2 cache boundaries to maximise line reuse and minimise execution misses.
 - **Memory Aliasing Minimization:** Audit function signatures to introduce the `restrict` keyword and `const` guarantees, removing compiler pointer-aliasing barriers to unlock auto-vectorisation ($SIMD$).
-- **The Execution Benchmark Suite:** Build a precision profiling harness using `clock_gettime` or high-resolution cycle counters. Calculate $GFLOPS$ and memory throughput metrics to compare the naive loop implementations directly against the cache-tiled variations.
-- **Automated Verification Harness:** Integrate a custom testing module that performs relative error evaluations (e.g., $|A - B| < \epsilon$) rather than direct floating-point identity checks (`==`) to safely verify correctness across varied compiler optimisation tiers.
+- **Explicit SIMD Intrinsics:** Hand-write vectorised kernels using compiler intrinsics (e.g. AVX2) for core tensor or matrix operations.
+- **The Execution Benchmark Suite:** Build a precision profiling harness using `clock_gettime` or high-resolution cycle counters. Calculate $GFLOPS$ and memory throughput metrics to compare naive implementations against cache-tiled variations.
+- **Automated Verification Harness:** Integrate a custom testing module that performs relative error evaluations (e.g. $\vert{}A - B\vert{} < \epsilon$) rather than direct floating-point identity checks (`==`) to safely verify correctness across varied compiler optimisation tiers.
 
 ---
 
 ## Phase 5 - Neural Network from Scratch
-**Goal:** Build a fully training neural network in C, using nothing but matlib and the standard library.
+**Goal:** Build a fully trained neural network in C, using nothing but `matlib` and the standard library.
 
 ### Concepts
 - Computational graph mental model (don't need to implement one - but understand it)
